@@ -4,6 +4,8 @@ Vigia a Copag Loja (e, quando houver token, o Mercado Livre), grava tudo num Pos
 e avisa um grupo do Telegram com um relatório de diferença. Várias máquinas podem rodar
 apontando para o mesmo grupo sem duplicar alerta.
 
+> **Não é dev?** Abra `docs/manual-gustavo.html` no navegador: o manual explica tudo sem precisar programar.
+
 ## Subir
 
 ```

@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Manual PokePrice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F3F5F8; --surface:#FFFFFF; --sunk:#E8ECF2; --ink:#131B26; --ink-2:#465264; --ink-3:#6B7686;
+  --line:#D5DBE4; --accent:#2750C8; --accent-ink:#FFFFFF; --accent-soft:#E3EAFB;
+  --hi:#F2C230; --hi-soft:#FCF3D2; --ok:#1C7F47; --ok-soft:#DDF2E5; --bad:#B8352A; --bad-soft:#F8E1DE;
+  --code-bg:#0F1722; --code-ink:#E4EAF3;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0E131B; --surface:#161D28; --sunk:#1C2533; --ink:#E7ECF4; --ink-2:#AAB5C6; --ink-3:#8491A5;
+    --line:#2A3446; --accent:#7C9BF2; --accent-ink:#0E131B; --accent-soft:#1D2944;
+    --hi:#F2C230; --hi-soft:#33290D; --ok:#5CC98B; --ok-soft:#14301F; --bad:#F08A7E; --bad-soft:#3A1A17;
+    --code-bg:#0A0F16; --code-ink:#E4EAF3;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0E131B; --surface:#161D28; --sunk:#1C2533; --ink:#E7ECF4; --ink-2:#AAB5C6; --ink-3:#8491A5;
+  --line:#2A3446; --accent:#7C9BF2; --accent-ink:#0E131B; --accent-soft:#1D2944;
+  --hi:#F2C230; --hi-soft:#33290D; --ok:#5CC98B; --ok-soft:#14301F; --bad:#F08A7E; --bad-soft:#3A1A17;
+  --code-bg:#0A0F16; --code-ink:#E4EAF3;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; margin:0}
+a{color:var(--accent); text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--hi); outline-offset:2px; border-radius:4px}
+.wrap{max-width:1180px; margin:0 auto; padding-inline:20px; padding-block:0 80px; display:grid; grid-template-columns:230px minmax(0,1fr); gap:56px}
+@media (max-width:900px){ .wrap{grid-template-columns:minmax(0,1fr); gap:0} nav.toc{display:none} }
+
+/* hero */
+header.hero{grid-column:1/-1; padding-block:56px 36px; border-bottom:1px solid var(--line); margin-bottom:8px}
+.eyebrow{font-family:var(--mono); font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(40px,7vw,72px); line-height:1; letter-spacing:-.02em; margin:.25em 0 .3em; text-wrap:balance}
+h1 .card{display:inline-block; background:var(--hi); color:#131B26; padding:0 .18em; border-radius:.12em; transform:rotate(-2deg)}
+.lede{font-size:20px; color:var(--ink-2); max-width:62ch; margin:0}
+.status{display:flex; flex-wrap:wrap; gap:10px; margin-top:26px}
+.pill{display:inline-flex; align-items:center; gap:8px; font-size:14.5px; font-weight:600; padding:6px 12px 6px 10px; border-radius:999px; border:1px solid var(--line); background:var(--surface)}
+.pill i{width:9px; height:9px; border-radius:50%; display:inline-block}
+.pill.ok i{background:var(--ok)} .pill.off i{background:var(--bad)} .pill.you{border-color:var(--hi); background:var(--hi-soft)} .pill.you i{background:var(--hi)}
+
+/* toc */
+nav.toc{position:sticky; top:env(safe-area-inset-top,0px); align-self:start; padding-top:32px; max-height:100vh; overflow:auto}
+nav.toc p{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); margin:0 0 10px}
+nav.toc ol{list-style:none; padding:0; margin:0; display:grid; gap:2px; counter-reset:t}
+nav.toc a{display:flex; gap:10px; padding:5px 8px; border-radius:6px; color:var(--ink-2); text-decoration:none; font-size:15px; line-height:1.35}
+nav.toc a::before{counter-increment:t; content:counter(t,decimal-leading-zero); font-family:var(--mono); font-size:12px; color:var(--ink-3); padding-top:2px}
+nav.toc a:hover{background:var(--sunk); color:var(--ink)}
+
+/* content */
+main{min-width:0}
+section{padding-block:40px 8px; border-bottom:1px solid var(--line)}
+section:last-child{border-bottom:0}
+h2{font-family:var(--display); font-weight:700; font-size:clamp(26px,3.4vw,34px); letter-spacing:-.01em; line-height:1.15; margin:0 0 14px; text-wrap:balance; display:flex; gap:14px; align-items:baseline}
+h2 .n{font-family:var(--mono); font-size:14px; font-weight:600; color:var(--accent); letter-spacing:0}
+h3{font-family:var(--display); font-weight:700; font-size:20px; margin:28px 0 8px}
+p,li{max-width:68ch}
+.muted{color:var(--ink-2)}
+strong{font-weight:700}
+code{font-family:var(--mono); font-size:.86em; background:var(--sunk); padding:.1em .38em; border-radius:4px}
+
+/* callouts */
+.note{display:grid; grid-template-columns:auto 1fr; gap:4px 14px; padding:16px 18px; border-radius:10px; margin:20px 0; max-width:74ch}
+.note b{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; padding-top:3px}
+.note p{margin:0}
+.note.warn{background:var(--hi-soft); border:1px solid var(--hi)}
+.note.stop{background:var(--bad-soft); border:1px solid var(--bad)} .note.stop b{color:var(--bad)}
+.note.info{background:var(--accent-soft); border:1px solid var(--accent)} .note.info b{color:var(--accent)}
+@media (max-width:520px){ .note{grid-template-columns:1fr} }
+
+/* diagram */
+.diagram{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:18px; margin:22px 0; overflow-x:auto}
+.diagram svg{display:block; width:100%; min-width:640px; height:auto}
+.diagram .box{fill:var(--sunk); stroke:var(--line); stroke-width:1.5}
+.diagram .box.main{fill:var(--accent-soft); stroke:var(--accent)}
+.diagram .box.off{fill:var(--surface); stroke:var(--bad); stroke-dasharray:6 5}
+.diagram .box.tg{fill:var(--ok-soft); stroke:var(--ok)}
+.diagram text{fill:var(--ink); font-family:var(--body); font-size:15px}
+.diagram text.t{font-family:var(--display); font-weight:700; font-size:16px}
+.diagram text.s{fill:var(--ink-2); font-size:13px}
+.diagram text.lbl{fill:var(--ink-3); font-family:var(--mono); font-size:11.5px}
+.diagram .ar{stroke:var(--ink-3); stroke-width:1.8; fill:none}
+.diagram .ar.off{stroke:var(--bad); stroke-dasharray:5 5}
+.diagram .head{fill:var(--ink-3)} .diagram .head.off{fill:var(--bad)}
+.caption{font-size:14.5px; color:var(--ink-3); margin-top:-8px}
+
+/* glossary */
+dl.gloss{display:grid; grid-template-columns:minmax(150px,210px) 1fr; margin:18px 0; border-top:1px solid var(--line)}
+dl.gloss dt,dl.gloss dd{padding:12px 0; border-bottom:1px solid var(--line); margin:0}
+dl.gloss dt{font-weight:700; padding-right:18px}
+dl.gloss dd{color:var(--ink-2)}
+@media (max-width:620px){ dl.gloss{grid-template-columns:1fr} dl.gloss dt{border-bottom:0; padding-bottom:0} }
+
+/* steps */
+ol.steps{list-style:none; padding:0; margin:18px 0; counter-reset:s; display:grid; gap:14px}
+ol.steps>li{counter-increment:s; display:grid; grid-template-columns:40px 1fr; gap:14px; max-width:none}
+ol.steps>li::before{content:counter(s); width:34px; height:34px; border-radius:50%; background:var(--accent); color:var(--accent-ink); font-family:var(--display); font-weight:700; display:grid; place-items:center; font-size:16px}
+ol.steps>li>div{min-width:0; padding-top:4px}
+ol.steps>li>div>p{margin:0 0 6px}
+.field{display:grid; grid-template-columns:minmax(120px,190px) 1fr; gap:0; margin:10px 0 4px; border:1px solid var(--line); border-radius:8px; overflow:hidden; background:var(--surface); max-width:680px}
+.field span{padding:9px 12px; border-bottom:1px solid var(--line); font-size:15.5px}
+.field span:nth-child(odd){background:var(--sunk); font-weight:600}
+.field span:nth-last-child(-n+2){border-bottom:0}
+@media (max-width:560px){ .field{grid-template-columns:1fr} .field span:nth-child(odd){border-bottom:0; padding-bottom:2px} }
+
+/* code */
+.cmd{position:relative; background:var(--code-bg); color:var(--code-ink); border-radius:9px; margin:10px 0 14px; max-width:760px}
+.cmd pre{margin:0; padding:14px 90px 14px 16px; overflow-x:auto; font-family:var(--mono); font-size:14px; line-height:1.55}
+.cmd .c{color:#8FA1BA}
+.cmd button{position:absolute; top:8px; right:8px; font:600 12.5px var(--body); background:#26324A; color:#E4EAF3; border:1px solid #3A4865; border-radius:6px; padding:5px 10px; cursor:pointer}
+.cmd button:hover{background:#314061}
+
+/* tables */
+.tbl{overflow-x:auto; margin:18px 0; border:1px solid var(--line); border-radius:10px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15.5px}
+th,td{text-align:left; padding:11px 14px; border-bottom:1px solid var(--line); vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--mono); font-size:12px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-3); font-weight:600; background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums; white-space:nowrap}
+.tag{font-family:var(--mono); font-size:12px; padding:2px 7px; border-radius:5px; white-space:nowrap}
+.tag.ok{background:var(--ok-soft); color:var(--ok)} .tag.bad{background:var(--bad-soft); color:var(--bad)} .tag.hi{background:var(--hi-soft); color:var(--ink)}
+
+/* checklist */
+ul.check{list-style:none; padding:0; margin:16px 0; display:grid; gap:10px}
+ul.check li{display:grid; grid-template-columns:26px 1fr; gap:10px; align-items:start; max-width:none}
+ul.check input{width:20px; height:20px; margin-top:3px; accent-color:var(--accent)}
+ul.check label{cursor:pointer}
+ul.check small{display:block; color:var(--ink-3); font-size:14.5px}
+
+/* timeline */
+.flow{display:grid; gap:0; margin:18px 0; max-width:720px}
+.flow div{display:grid; grid-template-columns:120px 1fr; gap:16px; padding:12px 0; border-top:1px dashed var(--line)}
+.flow div:first-child{border-top:0}
+.flow em{font-style:normal; font-family:var(--mono); font-size:12.5px; color:var(--accent); padding-top:3px}
+.flow p{margin:0}
+@media (max-width:520px){ .flow div{grid-template-columns:1fr; gap:2px} }
+
+details{border:1px solid var(--line); border-radius:10px; background:var(--surface); margin:10px 0; max-width:780px}
+summary{cursor:pointer; padding:13px 16px; font-weight:600}
+details>div{padding:0 16px 14px; color:var(--ink-2)}
+details p{margin:.4em 0}
+footer{grid-column:1/-1; color:var(--ink-3); font-size:14px; padding-top:30px}
+@media (prefers-reduced-motion:no-preference){ html{scroll-behavior:smooth} }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">PokePrice Automation · manual de operação · 24/09/2026</div>
+    <h1>Manual do <span class="card">Gustavo</span></h1>
+    <p class="lede">Tudo o que você precisa para entender o monitor de preço e estoque da coleção Pokémon TCG Celebração 30 Anos, cuidar da parte do Mercado Livre e, se quiser, rodar uma cópia na sua máquina. Sem precisar programar.</p>
+    <div class="status">
+      <span class="pill ok"><i></i>Copag: funcionando</span>
+      <span class="pill ok"><i></i>Telegram: funcionando</span>
+      <span class="pill off"><i></i>Mercado Livre: desligado</span>
+      <span class="pill you"><i></i>Próximo passo: com você</span>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Índice">
+    <p>Neste manual</p>
+    <ol>
+      <li><a href="#resumo">Em 1 minuto</a></li>
+      <li><a href="#pecas">Como as peças se ligam</a></li>
+      <li><a href="#glossario">Glossário</a></li>
+      <li><a href="#papel">O que é com você</a></li>
+      <li><a href="#app">Criar o app do Mercado Livre</a></li>
+      <li><a href="#chaves">Guardar e entregar as chaves</a></li>
+      <li><a href="#depois">O que acontece depois</a></li>
+      <li><a href="#precos">Preço sugerido e teto</a></li>
+      <li><a href="#reserva">Rodar na sua máquina</a></li>
+      <li><a href="#telegram">Entender as mensagens</a></li>
+      <li><a href="#problemas">Quando algo dá errado</a></li>
+      <li><a href="#faq">Perguntas frequentes</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <section id="resumo">
+      <h2><span class="n">01</span>Em 1 minuto</h2>
+      <p>Os produtos da coleção <strong>Celebração 30 Anos</strong> esgotam em minutos. Em 23/09 o Blister Duplo voltou ao estoque da Copag às 18:01 e sumiu às 18:03. Ninguém consegue ficar atualizando a página o dia inteiro, então um programa faz isso por nós.</p>
+      <p>A cada <strong>5 minutos</strong> ele pergunta à loja da Copag se algum dos 8 produtos voltou. Se voltou, manda uma mensagem no grupo do Telegram <strong>Gugu Automation Master Ultra</strong> com o preço e o link. Tudo o que ele vê fica guardado num banco de dados local, e é daí que sai o histórico de preços.</p>
+      <p>A segunda parte, que é com você, é o <strong>Mercado Livre</strong>: avisar quando alguém anunciar um desses produtos pelo preço oficial ou mais barato. Ela está desligada porque o Mercado Livre só libera essas informações para quem tem um aplicativo cadastrado. O primeiro passo é criar esse cadastro na sua conta.</p>
+    </section>
+
+    <section id="pecas">
+      <h2><span class="n">02</span>Como as peças se ligam</h2>
+      <p>São quatro peças. Três já funcionam, e a quarta (tracejada) é a que você vai destravar.</p>
+      <div class="diagram" role="img" aria-label="Diagrama: a Copag e o Mercado Livre enviam dados ao monitor, que guarda no banco e avisa o grupo do Telegram">
+        <svg viewBox="0 0 900 330" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path class="head" d="M0,0 L10,5 L0,10 z"/></marker>
+            <marker id="mo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path class="head off" d="M0,0 L10,5 L0,10 z"/></marker>
+          </defs>
+          <rect class="box" x="20" y="40" width="210" height="92" rx="10"/>
+          <text class="t" x="40" y="74">Loja da Copag</text>
+          <text class="s" x="40" y="98">responde: "tem estoque?"</text>
+          <text class="s" x="40" y="118">e "quanto custa?"</text>
+
+          <rect class="box off" x="20" y="196" width="210" height="92" rx="10"/>
+          <text class="t" x="40" y="230">Mercado Livre</text>
+          <text class="s" x="40" y="254">desligado: precisa do</text>
+          <text class="s" x="40" y="274">app que você vai criar</text>
+
+          <rect class="box main" x="330" y="100" width="230" height="130" rx="12"/>
+          <text class="t" x="350" y="136">Monitor</text>
+          <text class="s" x="350" y="160">programa dentro do Docker</text>
+          <text class="s" x="350" y="182">pergunta a cada 5 min,</text>
+          <text class="s" x="350" y="202">compara e decide se avisa</text>
+
+          <rect class="box" x="660" y="40" width="220" height="92" rx="10"/>
+          <text class="t" x="680" y="74">Banco de dados</text>
+          <text class="s" x="680" y="98">histórico de tudo que viu</text>
+          <text class="s" x="680" y="118">(PostgreSQL, local)</text>
+
+          <rect class="box tg" x="660" y="196" width="220" height="92" rx="10"/>
+          <text class="t" x="680" y="230">Grupo do Telegram</text>
+          <text class="s" x="680" y="254">recebe os alertas</text>
+          <text class="s" x="680" y="274">pelo @GuguLindo_bot</text>
+
+          <path class="ar" d="M230,86 C280,86 290,140 328,142" marker-end="url(#m)"/>
+          <text class="lbl" x="250" y="76">a cada 5 min</text>
+          <path class="ar off" d="M230,242 C280,242 290,190 328,188" marker-end="url(#mo)"/>
+          <text class="lbl" x="244" y="272">quando houver token</text>
+          <path class="ar" d="M560,140 C610,140 610,86 658,86" marker-end="url(#m)"/>
+          <text class="lbl" x="582" y="104">grava</text>
+          <path class="ar" d="M560,190 C610,190 610,242 658,242" marker-end="url(#m)"/>
+          <text class="lbl" x="582" y="232">avisa</text>
+        </svg>
+      </div>
+      <p class="caption">Tudo isso roda no computador de quem liga o monitor. Não existe servidor na nuvem e não há custo.</p>
+
+      <h3>E se houver mais de um computador?</h3>
+      <p>Você pode rodar uma cópia na sua máquina. Para o grupo não receber o mesmo alerta duas vezes, só um computador envia de cada vez: o <strong>líder</strong> (hoje, o do Daniel). Os outros são <strong>reservas</strong>: vigiam em silêncio e só começam a enviar se o líder ficar 15 minutos sem dar sinal de vida, por exemplo porque o PC dele desligou.</p>
+      <p>Para saber o que já foi avisado, os computadores usam uma <strong>mensagem fixada no grupo</strong>, escrita pelo próprio bot. É aquele texto cheio de chaves <code>{"a":...}</code> que aparece no topo do grupo. Parece lixo, mas é a memória compartilhada do sistema.</p>
+      <div class="note stop"><b>Não mexa</b><p>Não apague, não edite e não desafixe a mensagem "🤖 Estado do monitor". Se ela sumir, o bot cria outra, mas pode repetir um alerta de cada produto.</p></div>
+    </section>
+
+    <section id="glossario">
+      <h2><span class="n">03</span>Glossário</h2>
+      <p class="muted">Os termos que aparecem neste manual, cada um numa frase.</p>
+      <dl class="gloss">
+        <dt>API</dt><dd>Uma "porta de serviço" de um site, feita para programas conversarem com ele sem abrir a página. Em vez de HTML, ela responde com dados organizados.</dd>
+        <dt>Docker</dt><dd>Um programa que roda outros programas dentro de "caixas" isoladas. Você instala o Docker Desktop e não precisa instalar Python, banco de dados nem mais nada.</dd>
+        <dt>Container</dt><dd>Cada uma dessas caixas. Aqui são duas: <code>monitor</code> (o programa) e <code>db</code> (o banco de dados).</dd>
+        <dt>docker compose</dt><dd>O comando que liga ou desliga as duas caixas de uma vez, lendo a receita do arquivo <code>compose.yaml</code>.</dd>
+        <dt>.env</dt><dd>Um arquivo de texto com as configurações e senhas daquela máquina. Ele <strong>nunca</strong> vai para o GitHub.</dd>
+        <dt>Token</dt><dd>Uma senha comprida que um programa usa para provar quem é. O bot do Telegram tem um, e o Mercado Livre vai gerar outro.</dd>
+        <dt>App do Mercado Livre</dt><dd>Um cadastro de desenvolvedor na sua conta do ML. Ele gera o <strong>App ID</strong> (nome de usuário do programa) e a <strong>Secret Key</strong> (senha do programa).</dd>
+        <dt>OAuth</dt><dd>O processo em que você autoriza, pelo navegador, um programa a usar a sua conta. É o mesmo "Entrar com Google" que você já conhece.</dd>
+        <dt>Redirect URI</dt><dd>O endereço para onde o ML manda você depois de autorizar. Aqui ele só precisa existir: usamos a página do projeto no GitHub.</dd>
+        <dt>HTTP 200 / 401 / 403</dt><dd>Códigos de resposta de um site. 200 é "ok, aqui está". 401 é "quem é você?". 403 é "sei quem você é, mas não pode".</dd>
+        <dt>SKU</dt><dd>O código interno de um produto na loja. O Box ex Greninja, por exemplo, é o SKU <code>2608</code> na Copag.</dd>
+        <dt>Produto de catálogo <code>/p/MLB…</code></dt><dd>A página "oficial" de um produto no ML, que junta todos os vendedores daquele item. Comparar dentro dela evita confundir o produto com carta avulsa ou importado.</dd>
+        <dt>Teto</dt><dd>O preço máximo que dispara o alerta do ML: preço sugerido + R$ 1,00.</dd>
+        <dt>Líder e reserva</dt><dd>O computador que envia os alertas e os que ficam de prontidão. Veja a seção 02.</dd>
+        <dt>Monitor cego</dt><dd>Quando uma loja para de responder 3 vezes seguidas. O grupo é avisado, porque um monitor que para em silêncio é pior que nenhum.</dd>
+      </dl>
+    </section>
+
+    <section id="papel">
+      <h2><span class="n">04</span>O que é com você</h2>
+      <p>Marque conforme for fazendo. As marcações ficam salvas só neste navegador.</p>
+      <ul class="check" id="checklist">
+        <li><input type="checkbox" id="c1"><label for="c1"><strong>Criar o app no Mercado Livre</strong><small>Uns 5 minutos, na sua conta. Seção 05.</small></label></li>
+        <li><input type="checkbox" id="c2"><label for="c2"><strong>Entregar App ID e Secret Key por um canal privado</strong><small>Nunca no grupo. Seção 06.</small></label></li>
+        <li><input type="checkbox" id="c3"><label for="c3"><strong>Autorizar o app quando o Daniel mandar o link</strong><small>Um clique no navegador, logado na sua conta do ML. Seção 07.</small></label></li>
+        <li><input type="checkbox" id="c4"><label for="c4"><strong>Conseguir a lista oficial de preço sugerido</strong><small>Sem ela, o ML não tem teto e não alerta. Seção 08.</small></label></li>
+        <li><input type="checkbox" id="c5"><label for="c5"><strong>Opcional: rodar a sua máquina como reserva</strong><small>Assim os alertas continuam mesmo com o PC do Daniel desligado. Seção 09.</small></label></li>
+      </ul>
+    </section>
+
+    <section id="app">
+      <h2><span class="n">05</span>Criar o app do Mercado Livre</h2>
+      <p>O app fica na <strong>sua</strong> conta porque o cadastro pede o seu login e o aceite dos termos de desenvolvedor. Ninguém pode fazer isso por você.</p>
+      <ol class="steps">
+        <li><div>
+          <p>Abra <a href="https://developers.mercadolivre.com.br" target="_blank" rel="noopener">developers.mercadolivre.com.br</a> e entre com a sua conta normal do Mercado Livre.</p>
+        </div></li>
+        <li><div>
+          <p>Procure <strong>Criar aplicação</strong>, que fica no painel de aplicações (às vezes chamado de DevCenter). Se o site pedir para aceitar os termos de desenvolvedor, leia e aceite.</p>
+        </div></li>
+        <li><div>
+          <p>Preencha o formulário assim:</p>
+          <div class="field">
+            <span>Nome</span><span><code>PokePriceAutomation</code> (se já existir, qualquer variação)</span>
+            <span>Nome curto</span><span><code>pokeprice</code></span>
+            <span>Descrição</span><span>Monitor pessoal de preço de produtos Pokémon TCG</span>
+            <span>Redirect URI</span><span><code>https://github.com/D4nRossi/PokePriceAutomation</code></span>
+            <span>Permissões</span><span>Só <strong>leitura</strong>. Se aparecer <code>offline_access</code>, marque também.</span>
+            <span>Notificações / tópicos</span><span>Nenhum. Deixe em branco.</span>
+          </div>
+          <p class="muted">Não precisa de logo nem de site próprio.</p>
+        </div></li>
+        <li><div>
+          <p>Salve. O ML vai mostrar dois valores. Anote os dois:</p>
+          <div class="field">
+            <span>App ID</span><span>um número comprido, tipo <code>1234567890123456</code>. Pode ser visto por outros sem problema.</span>
+            <span>Secret Key</span><span>uma sequência de letras e números. É uma <strong>senha</strong>: trate como tal.</span>
+          </div>
+        </div></li>
+      </ol>
+      <div class="note info"><b>Se mudou</b><p>Sites mudam de visual. Se algum nome de botão ou campo não bater com este manual, siga pelo sentido. O que importa é sair com o App ID e a Secret Key, com permissão só de leitura e a Redirect URI acima.</p></div>
+      <div class="note warn"><b>Por que só leitura</b><p>O monitor só consulta preço. Ele nunca compra, nunca coloca no carrinho e nunca mexe na sua conta. Dar só leitura garante isso mesmo se a chave vazar.</p></div>
+    </section>
+
+    <section id="chaves">
+      <h2><span class="n">06</span>Guardar e entregar as chaves</h2>
+      <p>O projeto está num repositório <strong>público</strong> do GitHub. Qualquer pessoa na internet lê o que estiver lá. Por isso as chaves moram só num arquivo chamado <code>.env</code>, no computador que roda o monitor. Esse arquivo é ignorado pelo GitHub de propósito.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Onde</th><th>Pode colocar a Secret Key?</th></tr></thead>
+        <tbody>
+          <tr><td>Grupo do Telegram</td><td><span class="tag bad">não</span> todo mundo do grupo vê, e fica salvo</td></tr>
+          <tr><td>Print de tela, e-mail, issue ou commit</td><td><span class="tag bad">não</span></td></tr>
+          <tr><td>Mensagem direta para o Daniel, apagada depois</td><td><span class="tag hi">aceitável</span></td></tr>
+          <tr><td>Gerenciador de senha compartilhado (Bitwarden, 1Password)</td><td><span class="tag ok">melhor opção</span></td></tr>
+          <tr><td>Arquivo <code>.env</code> da sua máquina, se você mesmo rodar</td><td><span class="tag ok">sim</span></td></tr>
+        </tbody>
+      </table></div>
+      <p>No <code>.env</code> as linhas ficam assim, com os valores no lugar dos colchetes:</p>
+      <div class="cmd"><pre>ML_CLIENT_ID=[App ID]
+ML_CLIENT_SECRET=[Secret Key]</pre><button type="button" data-copy>Copiar</button></div>
+      <div class="note warn"><b>Vazou?</b><p>Sem pânico. No painel do app no Mercado Livre dá para gerar uma Secret Key nova. A antiga para de funcionar na hora, e é só atualizar o <code>.env</code>.</p></div>
+    </section>
+
+    <section id="depois">
+      <h2><span class="n">07</span>O que acontece depois</h2>
+      <p>Cada passo só começa se o anterior der certo. Nada é feito no chute.</p>
+      <div class="flow">
+        <div><em>passo 1</em><p><strong>Teste de acesso.</strong> Com as chaves, o Daniel refaz as consultas que hoje dão erro 401/403 e anota o resultado de cada uma.</p></div>
+        <div><em>passo 2</em><p><strong>Autorização, se precisar.</strong> Talvez o ML exija que o dono do app autorize pelo navegador. Aí o Daniel te manda um link que começa com <code>https://auth.mercadolivre.com.br/authorization?...</code>. Você abre logado, clica em autorizar, cai numa página do GitHub e copia o endereço completo da barra do navegador para ele. O código vale poucos minutos, então faça isso na hora.</p></div>
+        <div><em>passo 3</em><p><strong>Programar a leitura.</strong> Só depois de ver uma resposta real do ML o programa aprende a ler preço, vendedor e condição.</p></div>
+        <div><em>passo 4</em><p><strong>Filtrar o produto certo.</strong> Só contam ofertas da página de catálogo, produto novo e nacional. Carta avulsa, lote, importado e "compatível" ficam de fora.</p></div>
+        <div><em>passo 5</em><p><strong>Ligar.</strong> O ML entra no mesmo grupo e com o mesmo formato de mensagem da Copag.</p></div>
+        <div><em>plano B</em><p><strong>Se o ML continuar bloqueando mesmo com o app</strong>, a parte do ML sai do projeto e o grupo segue só com a Copag. Não vamos raspar o site na marra: viola os termos do ML e bloqueia o IP.</p></div>
+      </div>
+      <div class="note info"><b>Sem garantia</b><p>O erro de hoje vem de uma regra de política do ML, não só da falta de login. É possível que o app não resolva. O passo 1 existe para descobrir isso rápido.</p></div>
+    </section>
+
+    <section id="precos">
+      <h2><span class="n">08</span>Preço sugerido e teto</h2>
+      <p>O ML só alerta quando alguém anuncia pelo <strong>preço sugerido + R$ 1,00</strong> ou menos. Um anúncio exatamente R$ 1,00 acima do sugerido ainda conta. Para isso, o sistema precisa saber o preço sugerido de cada produto, que vem da lista "LISTA DE PREÇO OFICIAL SUGERIDO: POKÉMON TCG". Ela ainda não foi cadastrada.</p>
+      <p>Enquanto não chega, fica a referência do que a Copag cobra:</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Produto</th><th>Copag (23/09)</th><th>Teto, se o sugerido for igual</th><th>No ML</th></tr></thead>
+        <tbody>
+          <tr><td>Treinador Avançado (ETB)</td><td class="num">R$ 399,99</td><td class="num">R$ 400,99</td><td><span class="tag ok">mapeado</span></td></tr>
+          <tr><td>Box Coleção com Fichário</td><td class="num">R$ 230,99</td><td class="num">R$ 231,99</td><td><span class="tag ok">mapeado</span></td></tr>
+          <tr><td>Box ex Greninja</td><td class="num">R$ 169,99</td><td class="num">R$ 170,99</td><td><span class="tag ok">mapeado</span></td></tr>
+          <tr><td>Box ex Sylveon</td><td class="num">R$ 169,99</td><td class="num">R$ 170,99</td><td><span class="tag hi">falta o link</span></td></tr>
+          <tr><td>Box Coleção com Pôster</td><td class="num">R$ 115,99</td><td class="num">R$ 116,99</td><td><span class="tag hi">falta o link</span></td></tr>
+          <tr><td>Blister Triplo Lucario</td><td class="num">R$ 99,99</td><td class="num">R$ 100,99</td><td><span class="tag hi">falta o link</span></td></tr>
+          <tr><td>Blister Triplo Exeggutor</td><td class="num">R$ 99,99</td><td class="num">R$ 100,99</td><td><span class="tag ok">mapeado</span></td></tr>
+          <tr><td>Blister Duplo com Moeda</td><td class="num">R$ 69,99</td><td class="num">R$ 70,99</td><td><span class="tag ok">mapeado</span></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Se você achar os links que faltam</h3>
+      <p>Procure o produto no ML e abra a página que tem <code>/p/MLB</code> seguido de números no endereço, por exemplo <code>mercadolivre.com.br/…/p/MLB79396707</code>. Essa é a página de catálogo. Mande o endereço para o Daniel. Anúncio avulso (endereço com <code>MLB-</code> e hífen) não serve.</p>
+    </section>
+
+    <section id="reserva">
+      <h2><span class="n">09</span>Rodar na sua máquina</h2>
+      <p>É opcional, mas deixa o sistema mais robusto: se o PC do Daniel desligar, o seu assume sozinho em 15 minutos. O seu computador precisa ser Windows 10/11, Mac ou Linux, com uns 2 GB livres.</p>
+      <ol class="steps">
+        <li><div>
+          <p><strong>Instale o Docker Desktop</strong> em <a href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noopener">docker.com/products/docker-desktop</a>. No Windows ele pode pedir para reiniciar e instalar o WSL, aceite. Abra o Docker Desktop e espere o ícone da baleia ficar parado (verde, "Engine running").</p>
+          <p class="muted">Nas configurações do Docker Desktop, ligue "Start Docker Desktop when you sign in". Assim o monitor volta sozinho quando o PC reinicia.</p>
+        </div></li>
+        <li><div>
+          <p><strong>Baixe o projeto.</strong> Abra <a href="https://github.com/D4nRossi/PokePriceAutomation" target="_blank" rel="noopener">github.com/D4nRossi/PokePriceAutomation</a>, clique no botão verde <strong>Code</strong> e depois em <strong>Download ZIP</strong>. Extraia numa pasta fácil, por exemplo <code>C:\PokePrice</code>.</p>
+        </div></li>
+        <li><div>
+          <p><strong>Crie o seu <code>.env</code>.</strong> Na pasta, copie o arquivo <code>.env.example</code> e renomeie a cópia para <code>.env</code>. Abra no Bloco de Notas e preencha só estas linhas:</p>
+          <div class="cmd"><pre>TELEGRAM_BOT_TOKEN=[peça ao Daniel, em privado]
+TELEGRAM_CHAT_ID=[peça ao Daniel]
+LIDER=false
+MAQUINA=gustavo</pre><button type="button" data-copy>Copiar</button></div>
+          <div class="note stop"><b>Importante</b><p><code>LIDER</code> tem que ser <code>false</code>. Se duas máquinas forem líder, o grupo recebe todos os alertas em dobro.</p></div>
+          <p class="muted">No Windows, se o arquivo virar <code>.env.txt</code>, ative "Extensões de nomes de arquivos" no menu Exibir do Explorer e apague o <code>.txt</code>.</p>
+        </div></li>
+        <li><div>
+          <p><strong>Ligue.</strong> Na pasta do projeto, clique na barra de endereço do Explorer, digite <code>powershell</code> e aperte Enter. Na janela azul, cole:</p>
+          <div class="cmd"><pre>docker compose up -d --build</pre><button type="button" data-copy>Copiar</button></div>
+          <p class="muted">Na primeira vez demora uns 2 minutos, porque baixa tudo. Nas próximas é instantâneo.</p>
+        </div></li>
+        <li><div>
+          <p><strong>Confira.</strong> Cole este comando. Todas as linhas precisam começar com <code>[ok]</code> ou <code>[..]</code>:</p>
+          <div class="cmd"><pre>docker compose run --rm monitor python -m monitor.main --verificar</pre><button type="button" data-copy>Copiar</button></div>
+          <p>O resultado esperado é parecido com este:</p>
+          <div class="cmd"><pre><span class="c">[ok] banco: 0 observações gravadas
+[..] máquina: gustavo · líder: False · failover: 15 min
+[ok] bot: @GuguLindo_bot
+[ok] grupo: Gugu Automation Master Ultra (supergroup)
+[ok] bot é administrator, pode fixar: True
+[..] estado compartilhado: mensagem 6, último ativo DESKTOP-VPRVBHA em ...</span></pre></div>
+        </div></li>
+      </ol>
+      <h3>Comandos do dia a dia</h3>
+      <p class="muted">Sempre na pasta do projeto, dentro do PowerShell.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Quero…</th><th>Comando</th></tr></thead>
+        <tbody>
+          <tr><td>ver o que ele está fazendo agora</td><td><code>docker compose logs -f monitor</code> <span class="muted">(Ctrl+C para sair)</span></td></tr>
+          <tr><td>desligar</td><td><code>docker compose down</code></td></tr>
+          <tr><td>ligar de novo</td><td><code>docker compose up -d</code></td></tr>
+          <tr><td>aplicar mudança no <code>.env</code> ou no <code>catalogo.json</code></td><td><code>docker compose up -d</code> e depois <code>docker compose restart monitor</code></td></tr>
+          <tr><td>mandar uma mensagem de teste no grupo</td><td><code>docker compose run --rm monitor python -m monitor.main --teste-telegram</code></td></tr>
+          <tr><td>ver o último estado de cada produto</td><td><code>docker compose exec db psql -U pokemon -d pokemon -c "select * from vw_ultimo_estado"</code></td></tr>
+        </tbody>
+      </table></div>
+      <p>No log, uma linha normal fica assim. <code>-</code> quer dizer indisponível, e <code>SIM</code> vem com o preço:</p>
+      <div class="cmd"><pre><span class="c">24/09 09:15:02 INFO Treinador Avança=- | Box ex Greninja=- | Blister Duplo co=SIM R$ 69,99
+24/09 09:15:03 INFO reserva: DESKTOP-VPRVBHA ativo há 2 min; não envio</span></pre></div>
+      <p class="muted">"não envio" numa máquina reserva é o comportamento certo: o líder está vivo.</p>
+    </section>
+
+    <section id="telegram">
+      <h2><span class="n">10</span>Entender as mensagens</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>Mensagem</th><th>Significa</th><th>O que fazer</th></tr></thead>
+        <tbody>
+          <tr><td>🟢 VOLTOU AO ESTOQUE</td><td>Um produto ficou disponível na Copag. Sai uma vez; se esgotar e voltar, sai de novo.</td><td><strong>Correr.</strong> Esses produtos duram minutos.</td></tr>
+          <tr><td>📉 PREÇO CAIU</td><td>Continua disponível e ficou mais barato que na checagem anterior.</td><td>Avaliar.</td></tr>
+          <tr><td>💰 DENTRO DO TETO</td><td>(Quando o ML estiver ligado) alguém anunciou pelo sugerido + R$ 1,00 ou menos.</td><td>Conferir o anúncio e o vendedor antes de comprar.</td></tr>
+          <tr><td>🔴 MONITOR CEGO</td><td>A loja falhou 3 vezes seguidas. O monitor não está enxergando.</td><td>Nada, se passar sozinho. Se durar horas, avise o Daniel.</td></tr>
+          <tr><td>✅ voltou a responder</td><td>A loja que estava fora voltou.</td><td>Nada.</td></tr>
+          <tr><td>🆕 Produto novo</td><td>A Copag incluiu um item novo na categoria 30 Anos.</td><td>Avisar o Daniel para incluir no monitor.</td></tr>
+          <tr><td>🔁 assumiu os envios</td><td>O líder sumiu e uma reserva passou a enviar.</td><td>Nada. Volta ao normal quando o líder religar.</td></tr>
+          <tr><td>💓 Monitor vivo</td><td>Sinal diário, depois das 9h.</td><td><strong>Se não chegar num dia</strong>, nenhuma máquina está rodando.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Anatomia de um alerta</h3>
+      <div class="cmd"><pre><span class="c">🟢 VOLTOU AO ESTOQUE: Box ex Greninja        ← o quê
+Fonte: Copag Loja                            ← onde
+Preço: R$ 169,99
+Sugerido: R$ 169,99 · teto R$ 170,99 · igual · dentro do teto
+Preço anterior: R$ 179,99 (-R$ 10,00 (-5,6%)) ← diferença para a última vez
+Estava indisponível desde: 23/09 14:50 (há 2 h 10 min)
+Última vez disponível: nunca visto por esta máquina
+🔗 https://www.copagloja.com.br/box-greninja/p ← toque para comprar
+🖥️ DESKTOP-VPRVBHA · 23/09 17:00             ← qual máquina avisou</span></pre></div>
+    </section>
+
+    <section id="problemas">
+      <h2><span class="n">11</span>Quando algo dá errado</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>Sintoma</th><th>Causa provável</th><th>Solução</th></tr></thead>
+        <tbody>
+          <tr><td><code>error during connect</code> ou "Docker daemon is not running"</td><td>O Docker Desktop está fechado.</td><td>Abra o Docker Desktop, espere a baleia ficar verde e repita o comando.</td></tr>
+          <tr><td><code>--verificar</code> mostra <code>[ERRO] ... pode fixar: False</code></td><td>O bot perdeu o posto de administrador.</td><td>No grupo: Administradores → bot → ligar "Fixar mensagens".</td></tr>
+          <tr><td><code>[ERRO] getChat: 400 chat not found</code></td><td><code>TELEGRAM_CHAT_ID</code> errado no <code>.env</code>.</td><td>Copie o número exato, com o sinal de menos. Depois rode <code>docker compose up -d</code>.</td></tr>
+          <tr><td><code>401 Unauthorized</code> no Telegram</td><td>Token do bot errado ou trocado.</td><td>Peça o token atual ao Daniel.</td></tr>
+          <tr><td>Nenhum 💓 hoje</td><td>Nenhuma máquina está ligada, ou o Docker não abriu depois de reiniciar.</td><td>Abra o Docker Desktop. Veja o log com <code>docker compose logs --tail 20 monitor</code>.</td></tr>
+          <tr><td>Alertas chegando em dobro</td><td>Duas máquinas com <code>LIDER=true</code>, ou duas com o mesmo <code>MAQUINA</code>.</td><td>Deixe só uma como líder e dê um nome diferente para cada máquina.</td></tr>
+          <tr><td>🔴 MONITOR CEGO para copag</td><td>Site fora do ar ou internet caída.</td><td>Espere. Ele avisa ✅ quando voltar. Se durar mais de um dia, a Copag pode ter mudado o site: avise o Daniel.</td></tr>
+          <tr><td><code>port is already allocated</code> (5433)</td><td>Outro programa usa a porta do banco.</td><td>No <code>.env</code>, troque <code>POSTGRES_PORTA_LOCAL=5433</code> por <code>5434</code>.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="faq">
+      <h2><span class="n">12</span>Perguntas frequentes</h2>
+      <details><summary>O bot pode comprar alguma coisa ou mexer na minha conta do ML?</summary><div><p>Não. Ele só lê preço e estoque. Não faz login na conta de compras, não adiciona ao carrinho e não compra. O app do ML é criado com permissão só de leitura justamente para garantir isso.</p></div></details>
+      <details><summary>Por que não checa a cada minuto, se esgota tão rápido?</summary><div><p>Por educação com as lojas: consulta demais parece ataque e faz o IP ser bloqueado. Um monitor bloqueado fica cego justamente no dia que importa. Cinco minutos é o mínimo, e o programa ignora valores menores.</p></div></details>
+      <details><summary>Custa alguma coisa?</summary><div><p>Não. Roda no seu computador, o Docker Desktop é gratuito para uso pessoal, e o Telegram e o app do ML também não custam nada.</p></div></details>
+      <details><summary>Meu PC precisa ficar ligado o tempo todo?</summary><div><p>Só se você quiser ser reserva ativa. Se o seu PC estiver desligado, nada quebra: o do Daniel continua como líder.</p></div></details>
+      <details><summary>O que é aquela mensagem cheia de código fixada no grupo?</summary><div><p>É a memória compartilhada entre as máquinas: o que já foi avisado e qual máquina está enviando. O bot edita essa mensagem a cada 5 minutos, sem notificar ninguém. Não apague.</p></div></details>
+      <details><summary>Posso editar a lista de produtos?</summary><div><p>Sim, no arquivo <code>catalogo.json</code>, que é texto puro. Depois rode <code>docker compose restart monitor</code>. Se tiver dúvida sobre o formato, mande para o Daniel antes.</p></div></details>
+      <details><summary>E se eu quiser parar de participar?</summary><div><p>Rode <code>docker compose down</code> na sua máquina e, se quiser, apague o app no painel de desenvolvedor do ML. O resto continua funcionando com a Copag.</p></div></details>
+    </section>
+  </main>
+
+  <footer>Projeto: github.com/D4nRossi/PokePriceAutomation · detalhes técnicos em <code>README.md</code> e <code>docs/</code> · dúvidas: Daniel</footer>
+</div>
+
+<script>
+document.querySelectorAll('[data-copy]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var pre = btn.parentElement.querySelector('pre');
+    var txt = pre.innerText;
+    function done(ok){ btn.textContent = ok ? 'Copiado' : 'Selecione e copie'; setTimeout(function(){ btn.textContent='Copiar'; }, 1800); }
+    function selecionar(){ var r=document.createRange(); r.selectNodeContents(pre); var s=getSelection(); s.removeAllRanges(); s.addRange(r); done(false); }
+    try { navigator.clipboard.writeText(txt).then(function(){ done(true); }, selecionar); } catch(e){ selecionar(); }
+  });
+});
+(function(){
+  var KEY='pokeprice-checklist';
+  var saved={}; try{ saved=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){}
+  document.querySelectorAll('#checklist input').forEach(function(cb){
+    cb.checked=!!saved[cb.id];
+    cb.addEventListener('change', function(){ saved[cb.id]=cb.checked; try{ localStorage.setItem(KEY, JSON.stringify(saved)); }catch(e){} });
+  });
+})();
+</script>
+</body>
+</html>
