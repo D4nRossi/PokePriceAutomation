@@ -77,5 +77,6 @@ docker compose run --rm --no-deps monitor python -m unittest discover -s tests -
 
 - Mercado Livre desligado: sem token a API responde 401/403 e o site pede verificação anti-robô
   (`docs/00-spike-acesso.md`). O coletor só será escrito depois de ver resposta real com token.
+  Passo a passo para criar o app e ligar a fonte: **`docs/mercado-livre-guia.md`**.
 - Intervalo mínimo de 5 min por fonte, por regra; valores menores no `.env` são ignorados.
 - `legado/` guarda a v1 (script + tarefa agendada do Windows, já removida).
