@@ -1,0 +1,5 @@
+.env
+__pycache__/
+*.pyc
+legado/state.json
+legado/monitor.log

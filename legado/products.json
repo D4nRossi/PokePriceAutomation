@@ -1,0 +1,15 @@
+{
+  "categoria_fq": "C:/35741/106254/",
+  "intervalo_segundos": 300,
+  "falhas_para_alerta_cego": 3,
+  "produtos": [
+    {"sku": "2605", "nome": "Treinador Avançado (ETB)", "monitorar": true},
+    {"sku": "2607", "nome": "Box Coleção com Fichário", "monitorar": true},
+    {"sku": "2608", "nome": "Box ex Greninja", "monitorar": true},
+    {"sku": "2609", "nome": "Box ex Sylveon", "monitorar": true},
+    {"sku": "2606", "nome": "Box Coleção com Pôster", "monitorar": true},
+    {"sku": "2603", "nome": "Blister Triplo Lucario", "monitorar": true},
+    {"sku": "2604", "nome": "Blister Triplo Exeggutor", "monitorar": true},
+    {"sku": "2602", "nome": "Blister Duplo com Moeda", "monitorar": true}
+  ]
+}

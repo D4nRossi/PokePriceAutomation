@@ -1,0 +1,62 @@
+{
+  "_leia": "Fonte da verdade de produtos, links e preço sugerido. Editou? docker compose restart monitor. preco_sugerido null = ainda não cadastrado (sem teto).",
+  "fontes": [
+    {"codigo": "copag", "nome": "Copag Loja"},
+    {"codigo": "mercadolivre", "nome": "Mercado Livre"}
+  ],
+  "produtos": [
+    {
+      "codigo": "etb", "nome": "Treinador Avançado (ETB)", "ean": "0196214156319", "preco_sugerido": null,
+      "links": [
+        {"fonte": "copag", "id_externo": "2605", "url": "https://www.copagloja.com.br/treinador-avancado-pokemon-30-anos/p"},
+        {"fonte": "mercadolivre", "id_externo": "MLB79395943", "url": "https://www.mercadolivre.com.br/pokemon-celebracao-de-30-anos-treinador-avancado/p/MLB79395943"}
+      ]
+    },
+    {
+      "codigo": "box-fichario", "nome": "Box Coleção com Fichário", "ean": "0196214158689", "preco_sugerido": null,
+      "links": [
+        {"fonte": "copag", "id_externo": "2607", "url": "https://www.copagloja.com.br/box-colecao-fichario/p"},
+        {"fonte": "mercadolivre", "id_externo": "MLB79396525", "url": "https://www.mercadolivre.com.br/pokemon-celebracao-de-30-anos-box-colecao-com-fichario/p/MLB79396525"}
+      ]
+    },
+    {
+      "codigo": "box-greninja", "nome": "Box ex Greninja", "ean": "7896192380326", "preco_sugerido": null,
+      "links": [
+        {"fonte": "copag", "id_externo": "2608", "url": "https://www.copagloja.com.br/box-greninja/p"},
+        {"fonte": "mercadolivre", "id_externo": "MLB79396707", "url": "https://www.mercadolivre.com.br/pokemon-celebracao-de-30-anos-box-ex-greninja/p/MLB79396707"}
+      ]
+    },
+    {
+      "codigo": "box-sylveon", "nome": "Box ex Sylveon", "ean": "7896192380333", "preco_sugerido": null,
+      "links": [
+        {"fonte": "copag", "id_externo": "2609", "url": "https://www.copagloja.com.br/box-ex-sylveon/p"}
+      ]
+    },
+    {
+      "codigo": "box-poster", "nome": "Box Coleção com Pôster", "ean": "0196214165502", "preco_sugerido": null,
+      "links": [
+        {"fonte": "copag", "id_externo": "2606", "url": "https://www.copagloja.com.br/box-colecao-com-poster-/p"}
+      ]
+    },
+    {
+      "codigo": "blister-lucario", "nome": "Blister Triplo Lucario", "ean": "7896192380302", "preco_sugerido": null,
+      "links": [
+        {"fonte": "copag", "id_externo": "2603", "url": "https://www.copagloja.com.br/blister-triplo-lucario-/p"}
+      ]
+    },
+    {
+      "codigo": "blister-exeggutor", "nome": "Blister Triplo Exeggutor", "ean": "7896192380319", "preco_sugerido": null,
+      "links": [
+        {"fonte": "copag", "id_externo": "2604", "url": "https://www.copagloja.com.br/blister-triplo-exeggutor/p"},
+        {"fonte": "mercadolivre", "id_externo": "MLB79396270", "url": "https://www.mercadolivre.com.br/pokemon-celebracao-de-30-anos-blister-triplo-com-adesivo-exeggutor/p/MLB79396270"}
+      ]
+    },
+    {
+      "codigo": "blister-duplo", "nome": "Blister Duplo com Moeda", "ean": "0196214159884", "preco_sugerido": null,
+      "links": [
+        {"fonte": "copag", "id_externo": "2602", "url": "https://www.copagloja.com.br/blister-duplo-com-moeda/p"},
+        {"fonte": "mercadolivre", "id_externo": "MLB77672147", "url": "https://www.mercadolivre.com.br/blister-duplo-com-moeda-celebracao-30-anos-pokemon-tcg-portugues/p/MLB77672147"}
+      ]
+    }
+  ]
+}

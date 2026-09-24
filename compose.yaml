@@ -1,0 +1,40 @@
+name: monitor-pokemon
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: pokemon
+      POSTGRES_USER: pokemon
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pokemon-local}
+      TZ: America/Sao_Paulo
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      # só na própria máquina, para consultar com DBeaver/psql
+      - "127.0.0.1:${POSTGRES_PORTA_LOCAL:-5433}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pokemon -d pokemon"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  monitor:
+    build: ./app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: postgresql://pokemon:${POSTGRES_PASSWORD:-pokemon-local}@db:5432/pokemon
+      MAQUINA: ${MAQUINA:-${COMPUTERNAME:-sem-nome}}
+      CATALOGO: /app/catalogo.json
+    volumes:
+      - ./catalogo.json:/app/catalogo.json:ro
+
+volumes:
+  pgdata:
